@@ -39,8 +39,23 @@ class EditUserTest extends TestCase
     public function test_pagination() {
         $admin = User::role('admin')->first();
         $this->actingAs($admin);
+
+        $total = User::general()
+            ->count();
+
+        $totalVerified = User::general()
+            ->whereNotNull('email_verified_at')
+            ->count();
+
+        $verifiedPercentage = 0;
+
+        if ($total > 0) {
+            $verifiedPercentage = round(($totalVerified / $total) * 100, 2);
+        }
+
         Livewire::test(EditUser::class)
-            ->assertSee('Showing 10 of ' . User::general()->count() . ' users');
+            ->assertSee('Showing 1 - 10 of ' . User::general()->count() . ' users')
+            ->assertSee('Total (' . $total . ') : Verified (' . $totalVerified . ') => ' . $verifiedPercentage . '%');
     }
 
     /**
