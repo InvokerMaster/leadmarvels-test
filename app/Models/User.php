@@ -64,4 +64,20 @@ class User extends Authenticatable
     public function isAdmin() {
         return $this->hasRole('admin');
     }
+
+    public function scopeGeneral($query) {
+        return $query->whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'admin');
+        });
+    }
+
+    public function scopeFilter($query, $search) {
+        if (!$search) {
+            return $query;
+        }
+        return $query->where(function($query) use ($search) {
+            return $query->where('name', 'LIKE', "%$search%")
+                ->orWhere('email', 'LIKE', "%$search%");
+        });
+    }
 }
