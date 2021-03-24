@@ -23,7 +23,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::get('/users', function() {
+    Route::get('/admin/users', function() {
         return view('admin.user');
     })->name('admin.user');
 });

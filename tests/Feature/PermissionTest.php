@@ -20,7 +20,6 @@ class PermissionTest extends TestCase
      */
     public function test_general_users_cant_edit_user_but_only_admin()
     {
-        // TODO: implement test
         $admin = User::role('admin')->first();
 
         $user = User::factory()->create();
@@ -29,8 +28,10 @@ class PermissionTest extends TestCase
             ->call('toggleVerified', $user)
             ->assertHasNoErrors();
 
-        $hacker = User::factory()->create();
-        $this->actingAs($hacker);
+        $guest = User::factory()->create([
+            'email_verified_at' => now()
+        ]);
+        $this->actingAs($guest);
         Livewire::test(EditUser::class)
             ->call('toggleVerified', $user)
             ->assertForbidden();
@@ -41,7 +42,18 @@ class PermissionTest extends TestCase
      */
     public function test_general_users_cant_see_user_page()
     {
-        // TODO: implement test
-        $this->assertTrue(true);
+        $admin = User::role('admin')->first();
+
+        $guest = User::factory()->create([
+            'email_verified_at' => now()
+        ]);
+
+        $this->actingAs($admin);
+        $this->get(route('admin.user'))
+            ->assertStatus(200);
+            
+        $this->actingAs($guest);
+        $this->get(route('admin.user'))
+            ->assertRedirect();
     }
 }
