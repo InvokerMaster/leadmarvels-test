@@ -36,7 +36,9 @@ class Contract extends Model
                     'end_date' => 'End Date needs to be after Start Date',
                 ]);
             }
-            $count = Contract::where('company_id', $model->company_id)->where(function ($query) use ($model) {
+            $count = Contract::where('company_id', $model->company_id)
+            ->where('id', '<>', $model->id)
+            ->where(function ($query) use ($model) {
                 return $query->where(function ($query) use ($model) {
                     return $query->where('start_date', '<=', $model->end_date)
                         ->where('end_date', '>=', $model->end_date);
