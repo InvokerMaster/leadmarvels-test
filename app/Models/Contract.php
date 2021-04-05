@@ -19,8 +19,8 @@ class Contract extends Model
     ];
 
     protected $cast = [
-        'start_date' => 'date',
-        'end_date' => 'date'
+        'start_date' => 'datetime:Y-m-d H:i:s',
+        'end_date' => 'datetime:Y-m-d H:i:s'
     ];
 
     public function company() {

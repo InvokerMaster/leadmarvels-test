@@ -19,9 +19,13 @@ class ContractTest extends TestCase
     /**
      * @test
      */
-    public function contract_can_be_created_for_a_company() {
+    public function contract_can_be_created_and_updated_for_a_company() {
         $company = Company::factory()->create();
         $company->contracts()->save(Contract::factory()->make());
+        $contract = $company->contracts()->first();
+        $contract->update([
+            'start_date' => now()->addDay()
+        ]);
         $this->assertEquals($company->contracts()->count(), 1);
     }
 
